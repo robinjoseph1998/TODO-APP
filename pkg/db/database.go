@@ -2,6 +2,7 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -21,4 +22,14 @@ func ConnectDB() *mongo.Client {
 	}
 	DB = client
 	return client
+}
+
+func CreateMongoCollection(dbName, collectionName string) (*mongo.Collection, error) {
+	if DB == nil {
+		return nil, fmt.Errorf("MongoDB client is not connected")
+	}
+	database := DB.Database(dbName)
+	collection := database.Collection(collectionName)
+
+	return collection, nil
 }

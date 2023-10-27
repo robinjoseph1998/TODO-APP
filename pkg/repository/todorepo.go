@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"Todo/pkg/api/models"
-	repo "Todo/pkg/api/repository/interfaces"
+	"Todo/pkg/models"
+	repo "Todo/pkg/repository/interfaces"
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"

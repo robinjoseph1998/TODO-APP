@@ -1,7 +1,7 @@
 package interfaces
 
 import (
-	"Todo/pkg/api/models"
+	"Todo/pkg/models"
 )
 
 type UseCaseInterface interface {

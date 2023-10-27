@@ -1,9 +1,9 @@
 package usecase
 
 import (
-	"Todo/pkg/api/models"
-	repo "Todo/pkg/api/repository/interfaces"
-	use "Todo/pkg/api/usecase/interfaces"
+	"Todo/pkg/models"
+	repo "Todo/pkg/repository/interfaces"
+	use "Todo/pkg/usecase/interfaces"
 	"errors"
 )
 

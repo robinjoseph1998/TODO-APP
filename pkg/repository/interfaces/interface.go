@@ -1,6 +1,6 @@
 package interfaces
 
-import "Todo/pkg/api/models"
+import "Todo/pkg/models"
 
 type RepoInterfaces interface {
 	CreateName(request models.Test) (string, error)
