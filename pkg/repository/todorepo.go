@@ -1,9 +1,11 @@
 package repository
 
 import (
+	database "Todo/pkg/db"
 	"Todo/pkg/models"
 	repo "Todo/pkg/repository/interfaces"
 	"context"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -13,24 +15,39 @@ type TodoRepository struct {
 	collection *mongo.Collection
 }
 
-func NewTodoRepository(collection *mongo.Collection) repo.RepoInterfaces {
-	return &TodoRepository{collection: collection}
-
+func NewTodoRepository() repo.RepoInterfaces {
+	database.ConnectDB()
+	collection := database.DB.Database("myproject").Collection("Todo")
+	return &TodoRepository{collection}
 }
 
 func (rr *TodoRepository) CreateName(request models.Test) (string, error) {
-	cmd := bson.D{
-		{"insert", "Todo"},
-		{"documents", []interface{}{request}},
-	}
-	result := bson.M{}
-	err := rr.collection.Database().RunCommand(context.Background(), cmd).Decode(&result)
+	fmt.Println("Inserting Data", request.Name)
+	_, err := rr.collection.InsertOne(context.TODO(), request)
 	if err != nil {
 		return "", err
 	}
-	if result["ok"] == 1 {
-		return "Data Inserted Successfully", nil
-	} else {
-		return "failed to insert data", nil
+	return "Data Inserted Successfully", nil
+}
+
+func (rr *TodoRepository) GetName() ([]models.Test, error) {
+	filter := bson.M{}
+	ctx := context.TODO()
+	cur, err := rr.collection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
 	}
+	defer cur.Close(ctx)
+	var documents []models.Test
+	for cur.Next(ctx) {
+		var document models.Test
+		if err := cur.Decode(&document); err != nil {
+			return nil, err
+		}
+		documents = append(documents, document)
+	}
+	if err := cur.Err(); err != nil {
+		return nil, err
+	}
+	return documents, nil
 }

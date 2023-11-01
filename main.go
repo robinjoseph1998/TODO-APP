@@ -1,15 +1,17 @@
-package server
+package main
 
 import (
-	"Todo/pkg/api/di"
 	route "Todo/pkg/api/routes"
+	"Todo/pkg/di"
 
 	"github.com/gin-gonic/gin"
 )
 
-func StartServer() {
+func main() {
+
 	router := gin.Default()
 	Handler := di.InitializeHandlerApi()
 	router = route.Routers(router, Handler)
 	router.Run(":5000")
+
 }

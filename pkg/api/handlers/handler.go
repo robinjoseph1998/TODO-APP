@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"Todo/pkg/api/models"
-	use "Todo/pkg/api/usecase/interfaces"
+	"Todo/pkg/models"
+	use "Todo/pkg/usecase/interfaces"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -13,10 +13,7 @@ type Handler struct {
 }
 
 func NewHandler(usecase use.UseCaseInterface) *Handler {
-
-	return &Handler{
-		usecase: usecase,
-	}
+	return &Handler{usecase}
 }
 
 func (hh *Handler) TestFunction(c *gin.Context) {
@@ -35,5 +32,13 @@ func (hh *Handler) AddName(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"Name Saved": SavedName})
+}
 
+func (hh *Handler) ShowName(c *gin.Context) {
+	Name, err := hh.usecase.ExecuteShowName()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"Name Is": Name})
 }

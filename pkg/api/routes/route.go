@@ -10,6 +10,7 @@ func Routers(r *gin.Engine, handler *handlers.Handler) *gin.Engine {
 
 	r.GET("/test", handler.TestFunction)
 	r.POST("/write", handler.AddName)
+	r.GET("/show", handler.ShowName)
 
 	return r
 }

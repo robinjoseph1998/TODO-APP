@@ -12,7 +12,7 @@ type usecase struct {
 }
 
 func NewUsecase(Repo repo.RepoInterfaces) use.UseCaseInterface {
-	return &usecase{Repo: Repo}
+	return &usecase{Repo}
 }
 
 func (uu *usecase) ExecuteAddName(request models.Test) (string, error) {
@@ -21,4 +21,12 @@ func (uu *usecase) ExecuteAddName(request models.Test) (string, error) {
 		return "", errors.New("Can't added name")
 	}
 	return SavedName, nil
+}
+
+func (uu *usecase) ExecuteShowName() ([]models.Test, error) {
+	names, err := uu.Repo.GetName()
+	if err != nil {
+		return nil, errors.New("can't get name")
+	}
+	return names, nil
 }

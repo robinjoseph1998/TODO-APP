@@ -1,5 +1,5 @@
 package models
 
 type Test struct {
-	name string `bson:"name"`
+	Name string `bson:"name"`
 }
