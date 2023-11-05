@@ -5,7 +5,6 @@ import (
 	"Todo/pkg/models"
 	repo "Todo/pkg/repository/interfaces"
 	"context"
-	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -52,15 +51,12 @@ func (rr *TodoRepository) GetName() ([]models.Test, error) {
 }
 
 func (rr *TodoRepository) CreateTask(enteredTask models.Task) (*models.Task, error) {
-	fmt.Println("TASK", enteredTask)
 	_, err := rr.collection.InsertOne(context.TODO(), enteredTask)
 	if err != nil {
 		return nil, err
 	}
 	var CreatedTask models.Task
-	fmt.Println("TASK ID", enteredTask.ID)
 	err = rr.collection.FindOne(context.TODO(), bson.M{"task": enteredTask.Task}).Decode(&CreatedTask)
-	fmt.Println("CREATED TASK", CreatedTask)
 	if err != nil {
 		return nil, err
 	}
