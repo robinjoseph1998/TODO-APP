@@ -22,7 +22,6 @@ func NewTodoRepository() repo.RepoInterfaces {
 }
 
 func (rr *TodoRepository) CreateName(request models.Test) (string, error) {
-	fmt.Println("Inserting Data", request.Name)
 	_, err := rr.collection.InsertOne(context.TODO(), request)
 	if err != nil {
 		return "", err
@@ -50,4 +49,20 @@ func (rr *TodoRepository) GetName() ([]models.Test, error) {
 		return nil, err
 	}
 	return documents, nil
+}
+
+func (rr *TodoRepository) CreateTask(enteredTask models.Task) (*models.Task, error) {
+	fmt.Println("TASK", enteredTask)
+	_, err := rr.collection.InsertOne(context.TODO(), enteredTask)
+	if err != nil {
+		return nil, err
+	}
+	var CreatedTask models.Task
+	fmt.Println("TASK ID", enteredTask.ID)
+	err = rr.collection.FindOne(context.TODO(), bson.M{"task": enteredTask.Task}).Decode(&CreatedTask)
+	fmt.Println("CREATED TASK", CreatedTask)
+	if err != nil {
+		return nil, err
+	}
+	return &CreatedTask, nil
 }

@@ -42,3 +42,16 @@ func (hh *Handler) ShowName(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"Name Is": Name})
 }
+
+func (hh *Handler) CreateTask(c *gin.Context) {
+	Task := c.PostForm("task")
+	EnteredTask := models.Task{
+		Task: Task,
+	}
+	CreatedTask, err := hh.usecase.ExecuteCreateTask(EnteredTask)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"Created Task Is": CreatedTask})
+}
