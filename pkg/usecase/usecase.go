@@ -34,7 +34,7 @@ func (uu *usecase) ExecuteShowName() ([]models.Test, error) {
 func (uu *usecase) ExecuteCreateTask(enteredTask models.Task) (*models.Task, error) {
 	CreatedTask, err := uu.Repo.CreateTask(enteredTask)
 	if err != nil {
-		return nil, errors.New("issue in creating task")
+		return nil, errors.New("issues in creating task")
 	}
 	return CreatedTask, nil
 }
