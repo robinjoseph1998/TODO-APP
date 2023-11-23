@@ -40,7 +40,7 @@ func (hh *Handler) ShowName(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"Name Is": Name})
+	c.JSON(http.StatusOK, gin.H{"Name IS": Name})
 }
 
 func (hh *Handler) CreateTask(c *gin.Context) {
