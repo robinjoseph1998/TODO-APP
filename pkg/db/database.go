@@ -22,16 +22,3 @@ func ConnectDB() *mongo.Client {
 	DB = client
 	return client
 }
-
-// func CreateMongoCollection() (*mongo.Collection, error) {
-// 	dbName := "mydb"
-// 	collectionName := "Todo"
-
-// 	if DB == nil {
-// 		return nil, fmt.Errorf("MongoDB client is not connected")
-// 	}
-// 	database := DB.Database(dbName)
-// 	collection := database.Collection(collectionName)
-
-// 	return collection, nil
-// }
