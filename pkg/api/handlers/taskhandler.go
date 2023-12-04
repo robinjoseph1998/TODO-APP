@@ -8,19 +8,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Handler struct {
-	usecase use.UseCaseInterface
+type TaskHandler struct {
+	usecase use.TaskUseCaseInterface
 }
 
-func NewHandler(usecase use.UseCaseInterface) *Handler {
-	return &Handler{usecase}
+func NewTaskHandler(usecase use.TaskUseCaseInterface) *TaskHandler {
+	return &TaskHandler{usecase}
 }
 
-func (hh *Handler) TestFunction(c *gin.Context) {
+func (hh *TaskHandler) TestFunction(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{":::::": "WELCOME TO MY TODO APP"})
 }
 
-func (hh *Handler) AddName(c *gin.Context) {
+func (hh *TaskHandler) AddName(c *gin.Context) {
 	var request models.Test
 	if err := c.ShouldBind(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -34,7 +34,7 @@ func (hh *Handler) AddName(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"Name Saved": SavedName})
 }
 
-func (hh *Handler) ShowName(c *gin.Context) {
+func (hh *TaskHandler) ShowName(c *gin.Context) {
 	Name, err := hh.usecase.ExecuteShowName()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -43,7 +43,7 @@ func (hh *Handler) ShowName(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"Name IS": Name})
 }
 
-func (hh *Handler) CreateTask(c *gin.Context) {
+func (hh *TaskHandler) CreateTask(c *gin.Context) {
 	Task := c.PostForm("task")
 	EnteredTask := models.Task{
 		Task: Task,

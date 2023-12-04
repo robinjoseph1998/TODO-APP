@@ -13,7 +13,7 @@ import (
 
 func InitializeHandlerApi() *handlers.Handler {
 	wire.Build(
-		handlers.NewHandler,
+		handlers.NewTaskHandler,
 		usecase.NewUsecase,
 		repository.NewTodoRepository,
 	)

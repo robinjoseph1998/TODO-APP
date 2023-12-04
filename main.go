@@ -10,8 +10,10 @@ import (
 func main() {
 
 	router := gin.Default()
-	Handler := di.InitializeHandlerApi()
-	router = route.Routers(router, Handler)
+	TaskHandler := di.InitializeHandlerApi()
+	UserHandler := di.InitializeHandlerApi()
+	router = route.TaskRoutes(router, TaskHandler)
+	router = route.UserRoutes(router, UserHandler)
 	router.Run(":5000")
 
 }

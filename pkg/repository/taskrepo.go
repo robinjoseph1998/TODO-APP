@@ -10,17 +10,17 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type TodoRepository struct {
+type TaskRepository struct {
 	collection *mongo.Collection
 }
 
-func NewTodoRepository() repo.RepoInterfaces {
+func NewTaskRepository() repo.TaskRepoInterfaces {
 	database.ConnectDB()
 	collection := database.DB.Database("myproject").Collection("Todo")
-	return &TodoRepository{collection}
+	return &TaskRepository{collection}
 }
 
-func (rr *TodoRepository) CreateName(request models.Test) (string, error) {
+func (rr *TaskRepository) CreateName(request models.Test) (string, error) {
 	_, err := rr.collection.InsertOne(context.TODO(), request)
 	if err != nil {
 		return "", err
@@ -28,7 +28,7 @@ func (rr *TodoRepository) CreateName(request models.Test) (string, error) {
 	return "Data Inserted Successfully", nil
 }
 
-func (rr *TodoRepository) GetName() ([]models.Test, error) {
+func (rr *TaskRepository) GetName() ([]models.Test, error) {
 	filter := bson.M{}
 	ctx := context.TODO()
 	cur, err := rr.collection.Find(ctx, filter)
@@ -50,7 +50,7 @@ func (rr *TodoRepository) GetName() ([]models.Test, error) {
 	return documents, nil
 }
 
-func (rr *TodoRepository) CreateTask(enteredTask models.Task) (*models.Task, error) {
+func (rr *TaskRepository) CreateTask(enteredTask models.Task) (*models.Task, error) {
 	_, err := rr.collection.InsertOne(context.TODO(), enteredTask)
 	if err != nil {
 		return nil, err
