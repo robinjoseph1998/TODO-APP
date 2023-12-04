@@ -8,7 +8,7 @@ import (
 )
 
 type UserUsecase struct {
-	Repo repo.UserRepoInterfaces
+	UserRepo repo.UserRepoInterfaces
 }
 
 func NewUserUsecase(Repo repo.UserRepoInterfaces) use.UserUseCaseInterface {
@@ -16,7 +16,7 @@ func NewUserUsecase(Repo repo.UserRepoInterfaces) use.UserUseCaseInterface {
 }
 
 func (uu *UserUsecase) ExecuteSignup(request models.User) (*models.User, error) {
-	Email, err := uu.UserRepo.FetchEMail(request.Email)
+	Email, err := uu.UserRepo.FetchEmail(request.Email)
 	if err != nil {
 		return nil, err
 	}

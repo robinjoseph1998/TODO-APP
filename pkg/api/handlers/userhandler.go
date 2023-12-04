@@ -10,7 +10,7 @@ import (
 )
 
 type UserHandler struct {
-	usecase use.UserUseCaseInterface
+	UserUsecase use.UserUseCaseInterface
 }
 
 func NewUserHandler(usecase use.UserUseCaseInterface) *UserHandler {

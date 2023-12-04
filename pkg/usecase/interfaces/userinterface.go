@@ -5,5 +5,5 @@ import (
 )
 
 type UserUseCaseInterface interface {
-	ExecuteSignup(request models.User) (error, models.User)
+	ExecuteSignup(request models.User) (*models.User, error)
 }

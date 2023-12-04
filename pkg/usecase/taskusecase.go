@@ -8,7 +8,7 @@ import (
 )
 
 type TaskUsecase struct {
-	Repo repo.TaskRepoInterfaces
+	TaskRepo repo.TaskRepoInterfaces
 }
 
 func NewTaskUsecase(Repo repo.TaskRepoInterfaces) use.TaskUseCaseInterface {
@@ -16,7 +16,7 @@ func NewTaskUsecase(Repo repo.TaskRepoInterfaces) use.TaskUseCaseInterface {
 }
 
 func (uu *TaskUsecase) ExecuteAddName(request models.Test) (string, error) {
-	SavedName, err := uu.Repo.CreateName(request)
+	SavedName, err := uu.TaskRepo.CreateName(request)
 	if err != nil {
 		return "", errors.New("can't add name")
 	}
@@ -24,7 +24,7 @@ func (uu *TaskUsecase) ExecuteAddName(request models.Test) (string, error) {
 }
 
 func (uu *TaskUsecase) ExecuteShowName() ([]models.Test, error) {
-	names, err := uu.Repo.GetName()
+	names, err := uu.TaskRepo.GetName()
 	if err != nil {
 		return nil, errors.New("can't get name")
 	}
@@ -32,7 +32,7 @@ func (uu *TaskUsecase) ExecuteShowName() ([]models.Test, error) {
 }
 
 func (uu *TaskUsecase) ExecuteCreateTask(enteredTask models.Task) (*models.Task, error) {
-	CreatedTask, err := uu.Repo.CreateTask(enteredTask)
+	CreatedTask, err := uu.TaskRepo.CreateTask(enteredTask)
 	if err != nil {
 		return nil, errors.New("issues in creating task")
 	}
