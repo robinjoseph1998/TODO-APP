@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"Todo/pkg/models"
+	repo "Todo/pkg/repository/interfaces"
+	use "Todo/pkg/usecase/interfaces"
 	"errors"
 
 	"golang.org/x/crypto/bcrypt"
@@ -20,21 +22,21 @@ func (uu *UserUsecase) ExecuteSignup(request models.User) (*models.User, error) 
 	if err != nil {
 		return nil, err
 	}
-	if Email.email != "" {
-		return nil, errors.New("Email already exists")
+	if Email {
+		return nil, errors.New("email already exists")
 	}
 	Phone, err := uu.UserRepo.FetchPhoneNumber(request.Phone)
 	if err != nil {
 		return nil, err
 	}
-	if Phone.phone != "" {
-		return nil, errors.New("Phone number already exits")
+	if Phone {
+		return nil, errors.New("phone number already exits")
 	}
 	HashedPassword, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
 	}
-	NewUser := &models.User{
+	NewUser := models.User{
 		FirstName: request.FirstName,
 		LastName:  request.LastName,
 		Phone:     request.Phone,
@@ -45,5 +47,5 @@ func (uu *UserUsecase) ExecuteSignup(request models.User) (*models.User, error) 
 	if err != nil {
 		return nil, err
 	}
-	return NewUser, nil
+	return &NewUser, nil
 }

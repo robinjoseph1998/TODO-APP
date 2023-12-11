@@ -1,8 +1,8 @@
 package main
 
 import (
-	route "Todo/pkg/api/routes"
-	"Todo/pkg/di"
+	routes "Todo/pkg/api/routes"
+	di "Todo/pkg/di"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,10 +10,10 @@ import (
 func main() {
 
 	router := gin.Default()
-	TaskHandler := di.InitializeHandlerApi()
-	UserHandler := di.InitializeHandlerApi()
-	router = route.TaskRoutes(router, TaskHandler)
-	router = route.UserRoutes(router, UserHandler)
+	TaskHandler := di.InitializeTaskApi()
+	UserHandler := di.InitializeUserApi()
+	router = routes.TaskRoutes(router, TaskHandler)
+	router = routes.UserRoutes(router, UserHandler)
 	router.Run(":5000")
 
 }

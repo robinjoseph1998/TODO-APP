@@ -4,6 +4,6 @@ import "Todo/pkg/models"
 
 type UserRepoInterfaces interface {
 	CreateUser(user models.User) error
-	FetchEmail(email string) (*models.User, error)
-	FetchPhoneNumber(phone string) (*models.User, error)
+	FetchEmail(email string) (bool, error)
+	FetchPhoneNumber(phone string) (bool, error)
 }

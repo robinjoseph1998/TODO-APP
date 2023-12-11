@@ -14,10 +14,10 @@ type UserRepository struct {
 	collection *mongo.Collection
 }
 
-func NewUserRepository() repo.TaskRepoInterfaces {
+func NewUserRepository() repo.UserRepoInterfaces {
 	database.ConnectDB()
-	collection := database.DB.Database("myproject").Collection("Todo")
-	return &TaskRepository{collection}
+	collection := database.DB.Database("myproject").Collection("User")
+	return &UserRepository{collection}
 }
 
 func (ur *UserRepository) CreateUser(user models.User) error {
@@ -27,4 +27,32 @@ func (ur *UserRepository) CreateUser(user models.User) error {
 	}
 	log.Println("User Added SuccessFully")
 	return nil
+}
+
+func (ur *UserRepository) FetchEmail(email string) (bool, error) {
+	var result models.User
+	err := ur.collection.FindOne(context.TODO(), email).Decode(&result)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return false, nil
+		} else {
+			log.Println("error occured", err)
+			return false, nil
+		}
+	}
+	return true, nil
+}
+
+func (ur *UserRepository) FetchPhoneNumber(phone string) (bool, error) {
+	var result models.User
+	err := ur.collection.FindOne(context.TODO(), phone).Decode(&result)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return false, nil
+		} else {
+			log.Println("error occured", err)
+			return false, nil
+		}
+	}
+	return true, nil
 }

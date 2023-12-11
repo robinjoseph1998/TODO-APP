@@ -11,12 +11,21 @@ import (
 	"github.com/google/wire"
 )
 
-func InitializeHandlerApi() *handlers.Handler {
+func InitializeTaskApi() *handlers.TaskHandler {
 	wire.Build(
 		handlers.NewTaskHandler,
-		usecase.NewUsecase,
-		repository.NewTodoRepository,
+		usecase.NewTaskUsecase,
+		repository.NewTaskRepository,
 	)
-	return &handlers.Handler{}
+	return &handlers.TaskHandler{}
 
+}
+
+func InitializeUserApi() *handlers.UserHandler {
+	wire.Build(
+		handlers.NewUserHandler,
+		usecase.NewUserUsecase,
+		repository.NewUserRepository,
+	)
+	return &handlers.UserHandler{}
 }

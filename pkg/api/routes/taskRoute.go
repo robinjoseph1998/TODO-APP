@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Routers(r *gin.Engine, TaskHandler *handlers.TaskHandler) *gin.Engine {
+func TaskRoutes(r *gin.Engine, TaskHandler *handlers.TaskHandler) *gin.Engine {
 
 	r.GET("/test", TaskHandler.TestFunction)
 	r.POST("/write", TaskHandler.AddName)
