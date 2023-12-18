@@ -9,7 +9,7 @@ import (
 func TaskRoutes(r *gin.Engine, TaskHandler *handlers.TaskHandler) *gin.Engine {
 
 	r.GET("/test", TaskHandler.TestFunction)
-	r.POST("/write", TaskHandler.AddName)
+	r.POST("/addname", TaskHandler.AddName)
 	r.GET("/showname", TaskHandler.ShowName)
 	r.POST("/write", TaskHandler.CreateTask)
 

@@ -2,7 +2,7 @@ package main
 
 import (
 	routes "Todo/pkg/api/routes"
-	di "Todo/pkg/di"
+	"Todo/pkg/di"
 
 	"github.com/gin-gonic/gin"
 )
