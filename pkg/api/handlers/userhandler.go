@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"Todo/pkg/api/utils"
 	"Todo/pkg/models"
 	use "Todo/pkg/usecase/interfaces"
 	"log"
@@ -34,4 +35,24 @@ func (uh *UserHandler) UserSignup(c *gin.Context) {
 		"message": "Signup Successfull",
 		"user":    NewUser,
 	})
+}
+
+func (uh *UserHandler) UserLogin(c *gin.Context) {
+	var request utils.Login
+	if err := c.ShouldBind(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Error in login credentials"})
+		log.Printf(err.Error())
+		return
+	}
+	phone := request.Phone
+	password := request.Password
+
+	userID, err := uh.UserUsecase.ExecuteLogin(phone, password)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Invalid phone number or password"})
+		log.Printf(err.Error())
+		return
+	} else {
+		//Middleware JWT
+	}
 }
