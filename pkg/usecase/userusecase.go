@@ -49,3 +49,7 @@ func (uu *UserUsecase) ExecuteSignup(request models.User) (*models.User, error) 
 	}
 	return &NewUser, nil
 }
+func (uu *UserUsecase) ExecuteLogin(phone, password string) (int, error) {
+
+	return 99, nil
+}

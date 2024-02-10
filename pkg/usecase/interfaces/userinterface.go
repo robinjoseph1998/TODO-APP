@@ -6,4 +6,5 @@ import (
 
 type UserUseCaseInterface interface {
 	ExecuteSignup(request models.User) (*models.User, error)
+	ExecuteLogin(phone, password string) (int, error)
 }
