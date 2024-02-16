@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"Todo/pkg/api/middleware"
 	"Todo/pkg/api/utils"
 	"Todo/pkg/models"
 	use "Todo/pkg/usecase/interfaces"
@@ -53,6 +54,7 @@ func (uh *UserHandler) UserLogin(c *gin.Context) {
 		log.Printf(err.Error())
 		return
 	} else {
-		//Middleware JWT
+		middleware.GenToken(userID, phone, c)
+		c.JSON(http.StatusOK, gin.H{"message": "Logged In Successfully"})
 	}
 }
