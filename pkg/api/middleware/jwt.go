@@ -1,7 +1,9 @@
 package middleware
 
 import (
+	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"time"
 
@@ -37,4 +39,45 @@ func GenToken(userID int, phone string, c *gin.Context) (string, error) {
 	c.SetCookie("Authorize", tokenString, expiringSeconds, "", "", false, true)
 	return tokenString, nil
 
+}
+
+func ValidateCookie(c *gin.Context) {
+	tokenstring, err := c.Cookie("Authorize")
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"StatusCode": 401,
+			"Message":    "Unauthorized User",
+		})
+		return
+	}
+	token, err := jwt.Parse(tokenstring, func(token *jwt.Token) (interface{}, error) {
+		_, ok := token.Method.(*jwt.SigningMethodHMAC)
+		if !ok {
+			return nil, fmt.Errorf("Unexpected Signing Method:%v", token.Header["alg"])
+		}
+		return []byte(os.Getenv("SecretKey")), nil
+	})
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if ok && token.Valid {
+		if float64(time.Now().Unix()) > claims["exp"].(float64) {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+				"StatusCode": 401,
+				"Message":    "Cookie Expired",
+			})
+			return
+		}
+		c.Set("userID", fmt.Sprint(claims["userID"]))
+	} else {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"StatusCode": 401,
+			"Message":    "Invalid Claims",
+		})
+		return
+	}
+}
+
+func DeleteCookie(c *gin.Context) error {
+	c.SetCookie("Authorize", "", 0, "", "", false, true)
+	fmt.Println("Cookie Deleted")
+	return nil
 }
