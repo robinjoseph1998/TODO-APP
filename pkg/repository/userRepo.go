@@ -7,6 +7,7 @@ import (
 	"context"
 	"log"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -31,12 +32,12 @@ func (ur *UserRepository) CreateUser(user models.User) error {
 
 func (ur *UserRepository) FetchEmail(email string) (bool, error) {
 	var result models.User
-	err := ur.collection.FindOne(context.TODO(), email).Decode(&result)
+	filter := bson.M{"email": email}
+	err := ur.collection.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return false, nil
 		} else {
-			log.Println("error occured", err)
 			return false, nil
 		}
 	}
@@ -45,12 +46,12 @@ func (ur *UserRepository) FetchEmail(email string) (bool, error) {
 
 func (ur *UserRepository) FetchPhoneNumber(phone string) (bool, error) {
 	var result models.User
-	err := ur.collection.FindOne(context.TODO(), phone).Decode(&result)
+	filter := bson.M{"phone": phone}
+	err := ur.collection.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return false, nil
 		} else {
-			log.Println("error occured", err)
 			return false, nil
 		}
 	}
