@@ -32,7 +32,6 @@ func GenToken(userID int, phone string, c *gin.Context) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(SecretKey))
 	if err != nil {
-		log.Printf(err.Error())
 		return "", err
 	}
 	expiringSeconds := int(TokenExpireDuration.Seconds())
@@ -53,7 +52,8 @@ func ValidateCookie(c *gin.Context) {
 	token, err := jwt.Parse(tokenstring, func(token *jwt.Token) (interface{}, error) {
 		_, ok := token.Method.(*jwt.SigningMethodHMAC)
 		if !ok {
-			return nil, fmt.Errorf("Unexpected Signing Method:%v", token.Header["alg"])
+			log.Println("error", err)
+			return nil, fmt.Errorf("unexpected signing method:%v", token.Header["alg"])
 		}
 		return []byte(os.Getenv("SecretKey")), nil
 	})
