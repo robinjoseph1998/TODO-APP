@@ -5,7 +5,6 @@ type Test struct {
 }
 
 type Task struct {
-	ID   uint   `gorm:"PrimaryKey"`
 	Task string `bson:"task"`
 }
 
