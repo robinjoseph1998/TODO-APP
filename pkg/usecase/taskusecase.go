@@ -15,16 +15,8 @@ func NewTaskUsecase(Repo repo.TaskRepoInterfaces) use.TaskUseCaseInterface {
 	return &TaskUsecase{Repo}
 }
 
-func (uu *TaskUsecase) ExecuteAddName(request models.Test) (string, error) {
-	SavedName, err := uu.TaskRepo.CreateName(request)
-	if err != nil {
-		return "", errors.New("can't add name!")
-	}
-	return SavedName, nil
-}
-
-func (uu *TaskUsecase) ExecuteShowName() ([]models.Test, error) {
-	names, err := uu.TaskRepo.GetName()
+func (uu *TaskUsecase) ExecuteShowTasks() ([]models.Task, error) {
+	names, err := uu.TaskRepo.GetTasks()
 	if err != nil {
 		return nil, errors.New("can't get name")
 	}

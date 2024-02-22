@@ -10,9 +10,8 @@ import (
 func TaskRoutes(r *gin.Engine, TaskHandler *handlers.TaskHandler) *gin.Engine {
 
 	r.GET("/test", middleware.ValidateCookie, TaskHandler.TestFunction)
-	r.POST("/addname", middleware.ValidateCookie, TaskHandler.AddName)
-	r.GET("/showname", middleware.ValidateCookie, TaskHandler.ShowName)
-	r.POST("/write", middleware.ValidateCookie, TaskHandler.CreateTask)
+	r.GET("/showtasks", middleware.ValidateCookie, TaskHandler.ShowTasks)
+	r.POST("/createtask", middleware.ValidateCookie, TaskHandler.CreateTask)
 
 	return r
 }

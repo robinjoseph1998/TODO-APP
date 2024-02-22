@@ -20,15 +20,7 @@ func NewTaskRepository() repo.TaskRepoInterfaces {
 	return &TaskRepository{collection}
 }
 
-func (rr *TaskRepository) CreateName(request models.Test) (string, error) {
-	_, err := rr.collection.InsertOne(context.TODO(), request)
-	if err != nil {
-		return "", err
-	}
-	return "Data Inserted Successfully", nil
-}
-
-func (rr *TaskRepository) GetName() ([]models.Test, error) {
+func (rr *TaskRepository) GetTasks() ([]models.Task, error) {
 	filter := bson.M{}
 	ctx := context.TODO()
 	cur, err := rr.collection.Find(ctx, filter)
@@ -36,9 +28,9 @@ func (rr *TaskRepository) GetName() ([]models.Test, error) {
 		return nil, err
 	}
 	defer cur.Close(ctx)
-	var documents []models.Test
+	var documents []models.Task
 	for cur.Next(ctx) {
-		var document models.Test
+		var document models.Task
 		if err := cur.Decode(&document); err != nil {
 			return nil, err
 		}

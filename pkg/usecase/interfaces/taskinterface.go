@@ -5,7 +5,6 @@ import (
 )
 
 type TaskUseCaseInterface interface {
-	ExecuteAddName(request models.Test) (string, error)
-	ExecuteShowName() ([]models.Test, error)
+	ExecuteShowTasks() ([]models.Task, error)
 	ExecuteCreateTask(enteredTask models.Task) (*models.Task, error)
 }

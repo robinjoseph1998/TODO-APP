@@ -1,10 +1,7 @@
 package models
 
-type Test struct {
-	Name string `bson:"name"`
-}
-
 type Task struct {
+	NO   uint   `bson:"no`
 	Task string `bson:"task"`
 }
 
