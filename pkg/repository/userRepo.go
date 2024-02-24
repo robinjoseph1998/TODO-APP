@@ -57,3 +57,17 @@ func (ur *UserRepository) FetchPhoneNumber(phone string) (bool, error) {
 	}
 	return true, nil
 }
+
+func (ur *UserRepository) FetchUser(phone string) (*models.User, error) {
+	var User models.User
+	filter := bson.M{"phone": phone}
+	err := ur.collection.FindOne(context.TODO(), filter).Decode(&User)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, nil
+		} else {
+			return nil, nil
+		}
+	}
+	return &User, nil
+}

@@ -50,10 +50,22 @@ func (uu *UserUsecase) ExecuteSignup(request models.User) (*models.User, error) 
 	return &NewUser, nil
 }
 func (uu *UserUsecase) ExecuteLogin(phone, password string) (int, error) {
-	user, err := uu.UserRepo.FetchPhoneNumber(phone)
+	Phone, err := uu.UserRepo.FetchPhoneNumber(phone)
 	if err != nil {
 		return 0, err
 	}
-
-	return 99, nil
+	if !Phone {
+		return 0, errors.New("user with this phone number not exsits")
+	}
+	user, err := uu.UserRepo.FetchUser(phone)
+	if err != nil {
+		return 0, err
+	}
+	if user == nil {
+		return 0, errors.New("user not exists")
+	}
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
+		return 0, errors.New("invalid password")
+	}
+	return int(user.ID), nil
 }

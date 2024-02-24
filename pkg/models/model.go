@@ -6,6 +6,7 @@ type Task struct {
 }
 
 type User struct {
+	ID        uint   `bson:"_id,omitempty" json:"-"`
 	FirstName string `bson:"firstname"`
 	LastName  string `bson:"lastname"`
 	Phone     string `bson:"phone"`
