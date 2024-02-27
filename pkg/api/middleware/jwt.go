@@ -12,14 +12,14 @@ import (
 )
 
 type YourClaims struct {
-	userID int    `json:"userID"`
+	userID string `json:"userID"`
 	phone  string `json:"phone"`
 	jwt.StandardClaims
 }
 
 const TokenExpireDuration = time.Hour * 10
 
-func GenToken(userID int, phone string, c *gin.Context) (string, error) {
+func GenToken(userID string, phone string, c *gin.Context) (string, error) {
 	SecretKey := os.Getenv("SecretKey")
 	claims := YourClaims{
 		userID: userID,
@@ -29,6 +29,7 @@ func GenToken(userID int, phone string, c *gin.Context) (string, error) {
 			Issuer:    "Creator",
 		},
 	}
+	fmt.Println("claims", claims)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(SecretKey))
 	if err != nil {
