@@ -29,7 +29,6 @@ func GenToken(userID string, phone string, c *gin.Context) (string, error) {
 			Issuer:    "Creator",
 		},
 	}
-	fmt.Println("claims", claims)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(SecretKey))
 	if err != nil {

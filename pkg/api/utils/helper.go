@@ -1,10 +1,9 @@
 package utils
 
-type Task struct {
-	Task string `bson:"task"`
-}
+import "github.com/gin-gonic/gin"
 
-type Login struct {
-	Phone    string `bson:"phone"`
-	Password string `bson:"password"`
+func GetUserIDFromContext(c *gin.Context) string {
+	idStr := c.GetString("userID")
+	return idStr
+
 }

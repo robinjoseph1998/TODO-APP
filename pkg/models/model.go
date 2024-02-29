@@ -1,17 +1,25 @@
 package models
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"gopkg.in/mgo.v2/bson"
+)
 
 type Task struct {
-	NO   uint   `bson:"no`
-	Task string `bson:"task"`
+	UserID primitive.ObjectID `bson:"userid"`
+	Task   string             `bson:"task"`
 }
 
 type User struct {
-	ID        primitive.ObjectID `bson:"_id,omitempty"`
-	FirstName string             `bson:"firstname"`
-	LastName  string             `bson:"lastname"`
-	Phone     string             `bson:"phone"`
-	Email     string             `bson:"email"`
-	Password  string             `bson:"password"`
+	ID        bson.ObjectId `bson:"_id,omitempty"`
+	FirstName string        `bson:"firstname"`
+	LastName  string        `bson:"lastname"`
+	Phone     string        `bson:"phone"`
+	Email     string        `bson:"email"`
+	Password  string        `bson:"password"`
+}
+
+type Login struct {
+	Phone    string `bson:"phone"`
+	Password string `bson:"password"`
 }

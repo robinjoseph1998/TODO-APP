@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"Todo/pkg/api/middleware"
-	"Todo/pkg/api/utils"
 	"Todo/pkg/models"
 	use "Todo/pkg/usecase/interfaces"
 	"net/http"
@@ -36,7 +35,7 @@ func (uh *UserHandler) UserSignup(c *gin.Context) {
 }
 
 func (uh *UserHandler) UserLogin(c *gin.Context) {
-	var request utils.Login
+	var request models.Login
 	if err := c.ShouldBind(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Error in login credentials"})
 		return
