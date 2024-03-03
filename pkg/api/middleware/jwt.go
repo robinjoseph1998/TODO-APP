@@ -14,6 +14,7 @@ import (
 type YourClaims struct {
 	userID string `json:"userID"`
 	phone  string `json:"phone"`
+	role   string `json:"role"`
 	jwt.StandardClaims
 }
 
@@ -24,6 +25,7 @@ func GenToken(userID string, phone string, c *gin.Context) (string, error) {
 	claims := YourClaims{
 		userID: userID,
 		phone:  phone,
+		role:   "user",
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(TokenExpireDuration).Unix(),
 			Issuer:    "Creator",
@@ -36,12 +38,13 @@ func GenToken(userID string, phone string, c *gin.Context) (string, error) {
 	}
 	expiringSeconds := int(TokenExpireDuration.Seconds())
 	c.SetCookie("Authorize", tokenString, expiringSeconds, "", "", false, true)
+	fmt.Println("Claims", claims)
 	return tokenString, nil
-
 }
 
 func ValidateCookie(c *gin.Context) {
-	tokenstring, err := c.Cookie("Authorize")
+	// Extract JWT token from cookie
+	tokenString, err := c.Cookie("Authorize")
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"StatusCode": 401,
@@ -49,7 +52,8 @@ func ValidateCookie(c *gin.Context) {
 		})
 		return
 	}
-	token, err := jwt.Parse(tokenstring, func(token *jwt.Token) (interface{}, error) {
+	//parse token
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		_, ok := token.Method.(*jwt.SigningMethodHMAC)
 		if !ok {
 			log.Println("error", err)
@@ -57,23 +61,37 @@ func ValidateCookie(c *gin.Context) {
 		}
 		return []byte(os.Getenv("SecretKey")), nil
 	})
+
+	// Extract claims from token
 	claims, ok := token.Claims.(jwt.MapClaims)
-	if ok && token.Valid {
-		if float64(time.Now().Unix()) > claims["exp"].(float64) {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"StatusCode": 401,
-				"Message":    "Cookie Expired",
-			})
-			return
-		}
-		c.Set("userID", fmt.Sprint(claims["userID"]))
-	} else {
-		c.JSON(http.StatusUnauthorized, gin.H{
+	if !ok {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"StatusCode": 401,
 			"Message":    "Invalid Claims",
 		})
+	}
+	//Check token expiration
+	exp, ok := claims["exp"].(float64)
+	if !ok || exp < float64(time.Now().Unix()) {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"StatusCode": 401,
+			"Message":    "Token has expired",
+		})
 		return
 	}
+
+	// Extract user ID from claims
+	userID, ok := claims["userID"].(string)
+	if !ok {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"statusCode": 401,
+			"Message":    "userid not found in claims",
+		})
+	}
+	// Set user ID in Gin context
+	c.Set("userID", userID)
+	// Continue processing the request
+	c.Next()
 }
 
 func DeleteCookie(c *gin.Context) error {

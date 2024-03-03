@@ -35,13 +35,16 @@ func (hh *TaskHandler) ShowTasks(c *gin.Context) {
 func (hh *TaskHandler) CreateTask(c *gin.Context) {
 	Task := c.PostForm("task")
 	userID := utils.GetUserIDFromContext(c)
-	fmt.Println("USERID CONTEXT", userID)
 	id, err := primitive.ObjectIDFromHex(userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "can't fetch user id from the context"})
+		fmt.Println("err", err)
+		return
+	}
 	EnteredTask := models.Task{
 		Task:   Task,
 		UserID: id,
 	}
-	fmt.Println("EWNTERED TASK ID ", EnteredTask.UserID)
 	CreatedTask, err := hh.usecase.ExecuteCreateTask(EnteredTask)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
