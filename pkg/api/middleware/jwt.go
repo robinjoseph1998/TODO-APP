@@ -12,9 +12,9 @@ import (
 )
 
 type YourClaims struct {
-	userID string `json:"userID"`
-	phone  string `json:"phone"`
-	role   string `json:"role"`
+	UserID string `json:"userID"`
+	Phone  string `json:"phone"`
+	Role   string `json:"role"`
 	jwt.StandardClaims
 }
 
@@ -23,9 +23,9 @@ const TokenExpireDuration = time.Hour * 10
 func GenToken(userID string, phone string, c *gin.Context) (string, error) {
 	SecretKey := os.Getenv("SecretKey")
 	claims := YourClaims{
-		userID: userID,
-		phone:  phone,
-		role:   "user",
+		UserID: userID,
+		Phone:  phone,
+		Role:   "user",
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(TokenExpireDuration).Unix(),
 			Issuer:    "Creator",
@@ -38,7 +38,6 @@ func GenToken(userID string, phone string, c *gin.Context) (string, error) {
 	}
 	expiringSeconds := int(TokenExpireDuration.Seconds())
 	c.SetCookie("Authorize", tokenString, expiringSeconds, "", "", false, true)
-	fmt.Println("Claims", claims)
 	return tokenString, nil
 }
 
@@ -61,7 +60,6 @@ func ValidateCookie(c *gin.Context) {
 		}
 		return []byte(os.Getenv("SecretKey")), nil
 	})
-
 	// Extract claims from token
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
@@ -79,13 +77,12 @@ func ValidateCookie(c *gin.Context) {
 		})
 		return
 	}
-
 	// Extract user ID from claims
 	userID, ok := claims["userID"].(string)
 	if !ok {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"statusCode": 401,
-			"Message":    "userid not found in claims",
+			"Message":    "userID not found in claims",
 		})
 	}
 	// Set user ID in Gin context

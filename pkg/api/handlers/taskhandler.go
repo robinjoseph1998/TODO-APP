@@ -4,7 +4,6 @@ import (
 	"Todo/pkg/api/utils"
 	"Todo/pkg/models"
 	use "Todo/pkg/usecase/interfaces"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -34,16 +33,18 @@ func (hh *TaskHandler) ShowTasks(c *gin.Context) {
 
 func (hh *TaskHandler) CreateTask(c *gin.Context) {
 	Task := c.PostForm("task")
-	userID := utils.GetUserIDFromContext(c)
-	id, err := primitive.ObjectIDFromHex(userID)
+	userID, err := utils.GetUserIDFromContext(c)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "can't fetch user id from the context"})
-		fmt.Println("err", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
+	}
+	Id, err := primitive.ObjectIDFromHex(userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 	EnteredTask := models.Task{
 		Task:   Task,
-		UserID: id,
+		UserID: Id,
 	}
 	CreatedTask, err := hh.usecase.ExecuteCreateTask(EnteredTask)
 	if err != nil {

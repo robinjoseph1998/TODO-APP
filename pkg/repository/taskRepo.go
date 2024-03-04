@@ -5,7 +5,6 @@ import (
 	"Todo/pkg/models"
 	repo "Todo/pkg/repository/interfaces"
 	"context"
-	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -49,7 +48,6 @@ func (rr *TaskRepository) CreateTask(enteredTask models.Task) (*models.Task, err
 		return nil, err
 	}
 	var CreatedTask models.Task
-	fmt.Println("USSRRRRID", enteredTask.UserID)
 	err = rr.collection.FindOne(context.TODO(), bson.M{"task": enteredTask.Task, "userid": enteredTask.UserID}).Decode(&CreatedTask)
 	if err != nil {
 		return nil, err
