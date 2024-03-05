@@ -4,10 +4,10 @@ import (
 	"Todo/pkg/api/utils"
 	"Todo/pkg/models"
 	use "Todo/pkg/usecase/interfaces"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type TaskHandler struct {
@@ -38,13 +38,14 @@ func (hh *TaskHandler) CreateTask(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	Id, err := primitive.ObjectIDFromHex(userID)
+	fmt.Println("USERID", userID)
+	// Id, err := primitive.ObjectIDFromHex(userID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	}
 	EnteredTask := models.Task{
 		Task:   Task,
-		UserID: Id,
+		UserID: userID,
 	}
 	CreatedTask, err := hh.usecase.ExecuteCreateTask(EnteredTask)
 	if err != nil {

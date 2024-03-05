@@ -5,6 +5,7 @@ import (
 	"Todo/pkg/models"
 	repo "Todo/pkg/repository/interfaces"
 	"context"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -43,6 +44,7 @@ func (rr *TaskRepository) GetTasks() ([]models.Task, error) {
 }
 
 func (rr *TaskRepository) CreateTask(enteredTask models.Task) (*models.Task, error) {
+	fmt.Println("enteredtask", enteredTask)
 	_, err := rr.collection.InsertOne(context.TODO(), enteredTask)
 	if err != nil {
 		return nil, err
