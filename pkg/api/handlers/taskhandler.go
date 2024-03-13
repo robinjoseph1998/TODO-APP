@@ -4,7 +4,6 @@ import (
 	"Todo/pkg/api/utils"
 	"Todo/pkg/models"
 	use "Todo/pkg/usecase/interfaces"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -17,11 +16,6 @@ type TaskHandler struct {
 func NewTaskHandler(usecase use.TaskUseCaseInterface) *TaskHandler {
 	return &TaskHandler{usecase}
 }
-
-func (hh *TaskHandler) TestFunction(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{":::::": "WELCOME TO MY TODO APP"})
-}
-
 func (hh *TaskHandler) ShowTasks(c *gin.Context) {
 	Tasks, err := hh.usecase.ExecuteShowTasks()
 	if err != nil {
@@ -38,11 +32,6 @@ func (hh *TaskHandler) CreateTask(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Println("USERID", userID)
-	// Id, err := primitive.ObjectIDFromHex(userID)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	}
 	EnteredTask := models.Task{
 		Task:   Task,
 		UserID: userID,
@@ -53,4 +42,18 @@ func (hh *TaskHandler) CreateTask(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"Created Task Is": CreatedTask})
+}
+
+func (hh *TaskHandler) EditTask(c *gin.Context) {
+	taskNo := c.PostForm("no")
+	updatedTask := c.PostForm("sstring")
+	userId, err := utils.GetUserIDFromContext(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	updateTask, err := hh.usecase.ExecuteUpdateTask(taskNo, updatedTask, userId)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"updated Task": updateTask})
+	}
 }
