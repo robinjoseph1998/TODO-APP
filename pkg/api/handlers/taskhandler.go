@@ -45,15 +45,15 @@ func (hh *TaskHandler) CreateTask(c *gin.Context) {
 }
 
 func (hh *TaskHandler) EditTask(c *gin.Context) {
-	taskNo := c.PostForm("no")
-	updatedTask := c.PostForm("sstring")
-	userId, err := utils.GetUserIDFromContext(c)
+	var request utils.TaskUpdateRequest
+	if err := c.ShouldBind(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	updatedTask, err := hh.usecase.ExecuteUpdateTask(request.TaskId, request.Task)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	updateTask, err := hh.usecase.ExecuteUpdateTask(taskNo, updatedTask, userId)
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"updated Task": updateTask})
-	}
+	c.JSON(http.StatusAccepted, gin.H{"updatedTask": updatedTask})
 }

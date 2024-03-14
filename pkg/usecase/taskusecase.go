@@ -31,8 +31,8 @@ func (uu *TaskUsecase) ExecuteCreateTask(enteredTask models.Task) (*models.Task,
 	return CreatedTask, nil
 }
 
-func (uu *TaskUsecase) ExecuteUpdateTask(taskNo int, updatedTask string, userId string) (*models.Task, error) {
-	Task, err := uu.TaskRepo.UpdateTask(taskNo, updatedTask, userId)
+func (uu *TaskUsecase) ExecuteUpdateTask(taskId string, updatedTask string) (*models.Task, error) {
+	Task, err := uu.TaskRepo.UpdateTask(taskId, updatedTask)
 	if err != nil {
 		return nil, errors.New("can't update task")
 	}

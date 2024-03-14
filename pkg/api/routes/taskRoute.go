@@ -11,7 +11,7 @@ func TaskRoutes(r *gin.Engine, TaskHandler *handlers.TaskHandler) *gin.Engine {
 
 	r.GET("/showtasks", middleware.ValidateCookie, TaskHandler.ShowTasks)
 	r.POST("/createtask", middleware.ValidateCookie, TaskHandler.CreateTask)
-	r.PUT("/edittask", middleware.ValidateCookie, TaskHandler.EditTask)
+	r.PATCH("/edittask", middleware.ValidateCookie, TaskHandler.EditTask)
 
 	return r
 }

@@ -13,3 +13,8 @@ func GetUserIDFromContext(c *gin.Context) (string, error) {
 	}
 	return "", errors.New("user id not found in the context")
 }
+
+type TaskUpdateRequest struct {
+	TaskId string `json:"taskId"`
+	Task   string `json:"task"`
+}
