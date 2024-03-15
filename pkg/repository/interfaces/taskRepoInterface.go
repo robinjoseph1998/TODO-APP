@@ -5,7 +5,7 @@ import (
 )
 
 type TaskRepoInterfaces interface {
-	GetTasks() ([]models.Task, error)
+	GetTasks(userID string) ([]models.Task, error)
 	CreateTask(enteredTask models.Task) (*models.Task, error)
 	UpdateTask(taskId string, task string) (*models.Task, error)
 }

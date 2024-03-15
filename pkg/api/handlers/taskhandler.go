@@ -17,9 +17,17 @@ func NewTaskHandler(usecase use.TaskUseCaseInterface) *TaskHandler {
 	return &TaskHandler{usecase}
 }
 func (hh *TaskHandler) ShowTasks(c *gin.Context) {
-	Tasks, err := hh.usecase.ExecuteShowTasks()
+	userID, err := utils.GetUserIDFromContext(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	Tasks, err := hh.usecase.ExecuteShowTasks(userID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	} else if Tasks == nil {
+		c.JSON(http.StatusNotFound, gin.H{"message": "no tasks found"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"Tasks": Tasks})

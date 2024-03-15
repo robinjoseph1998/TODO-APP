@@ -15,12 +15,12 @@ func NewTaskUsecase(Repo repo.TaskRepoInterfaces) use.TaskUseCaseInterface {
 	return &TaskUsecase{Repo}
 }
 
-func (uu *TaskUsecase) ExecuteShowTasks() ([]models.Task, error) {
-	names, err := uu.TaskRepo.GetTasks()
+func (uu *TaskUsecase) ExecuteShowTasks(userID string) ([]models.Task, error) {
+	tasks, err := uu.TaskRepo.GetTasks(userID)
 	if err != nil {
-		return nil, errors.New("can't get name")
+		return nil, errors.New("can't get tasks")
 	}
-	return names, nil
+	return tasks, nil
 }
 
 func (uu *TaskUsecase) ExecuteCreateTask(enteredTask models.Task) (*models.Task, error) {

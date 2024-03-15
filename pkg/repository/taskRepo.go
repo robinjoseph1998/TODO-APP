@@ -5,7 +5,6 @@ import (
 	"Todo/pkg/models"
 	repo "Todo/pkg/repository/interfaces"
 	"context"
-	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -22,8 +21,8 @@ func NewTaskRepository() repo.TaskRepoInterfaces {
 	return &TaskRepository{collection}
 }
 
-func (rr *TaskRepository) GetTasks() ([]models.Task, error) {
-	filter := bson.M{}
+func (rr *TaskRepository) GetTasks(userID string) ([]models.Task, error) {
+	filter := bson.M{"userid": userID}
 	ctx := context.TODO()
 	cur, err := rr.collection.Find(ctx, filter)
 	if err != nil {
@@ -62,11 +61,8 @@ func (rr *TaskRepository) UpdateTask(taskId string, task string) (*models.Task, 
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("objid", objId)
 	filter := bson.M{"_id": objId}
-	fmt.Println("filter", filter)
 	update := bson.M{"$set": bson.M{"task": task}}
-	fmt.Println("filter", filter)
 	_, err = rr.collection.UpdateOne(context.TODO(), filter, update)
 	if err != nil {
 		return nil, err
