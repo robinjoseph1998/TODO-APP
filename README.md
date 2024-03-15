@@ -13,5 +13,5 @@ Delete Task
 
 Delete All tasks
 
-Each Request Validating Using JWT
+Each Requests Validating Using JWT
 
