@@ -18,3 +18,7 @@ type TaskUpdateRequest struct {
 	TaskId string `json:"taskId"`
 	Task   string `json:"task"`
 }
+
+type TaskDeleteRequest struct {
+	TaskId string `json:"taskId"`
+}

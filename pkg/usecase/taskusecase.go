@@ -38,3 +38,19 @@ func (uu *TaskUsecase) ExecuteUpdateTask(taskId string, updatedTask string) (*mo
 	}
 	return Task, nil
 }
+
+func (uu *TaskUsecase) ExecuteDeleteTask(taskId string, userId string) ([]models.Task, error) {
+	restTask, err := uu.TaskRepo.DeleteTask(taskId, userId)
+	if err != nil {
+		return nil, errors.New("can't delete task")
+	}
+	return restTask, nil
+}
+
+func (uu *TaskUsecase) ExecuteDeleteAllTasks(userId string) ([]models.Task, error) {
+	restTask, err := uu.TaskRepo.DeleteAllTasks(userId)
+	if err != nil {
+		return nil, errors.New("can't delete all tasks")
+	}
+	return restTask, nil
+}

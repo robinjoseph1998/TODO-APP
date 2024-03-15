@@ -65,3 +65,40 @@ func (hh *TaskHandler) EditTask(c *gin.Context) {
 	}
 	c.JSON(http.StatusAccepted, gin.H{"updatedTask": updatedTask})
 }
+
+func (hh *TaskHandler) DeleteTask(c *gin.Context) {
+	var request utils.TaskDeleteRequest
+	if err := c.ShouldBind(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	userId, err := utils.GetUserIDFromContext(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	RestTasks, err := hh.usecase.ExecuteDeleteTask(request.TaskId, userId)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusAccepted, gin.H{"Tasks": RestTasks})
+}
+
+func (hh *TaskHandler) DeleteAllTasks(c *gin.Context) {
+	userId, err := utils.GetUserIDFromContext(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
+	RestTasks, err := hh.usecase.ExecuteDeleteAllTasks(userId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	if len(RestTasks) > 0 {
+		c.JSON(http.StatusFound, gin.H{"message": "not all tasks deleted", "found": RestTasks})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "all tasks deleted successfully"})
+}

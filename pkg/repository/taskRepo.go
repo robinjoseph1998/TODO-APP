@@ -49,7 +49,8 @@ func (rr *TaskRepository) CreateTask(enteredTask models.Task) (*models.Task, err
 		return nil, err
 	}
 	var CreatedTask models.Task
-	err = rr.collection.FindOne(context.TODO(), bson.M{"task": enteredTask.Task, "userid": enteredTask.UserID}).Decode(&CreatedTask)
+	err = rr.collection.FindOne(context.TODO(),
+		bson.M{"task": enteredTask.Task, "userid": enteredTask.UserID}).Decode(&CreatedTask)
 	if err != nil {
 		return nil, err
 	}
@@ -73,4 +74,36 @@ func (rr *TaskRepository) UpdateTask(taskId string, task string) (*models.Task, 
 		return nil, err
 	}
 	return &updatedTask, nil
+}
+
+func (rr *TaskRepository) DeleteTask(taskId string, userId string) ([]models.Task, error) {
+	objId, err := primitive.ObjectIDFromHex(taskId)
+	if err != nil {
+		return nil, err
+	}
+	filter := bson.M{"_id": objId, "userid": userId}
+	_, err = rr.collection.DeleteOne(context.TODO(), filter)
+	if err != nil {
+		return nil, err
+	}
+	var RestTasks []models.Task
+	RestTasks, err = rr.GetTasks(userId)
+	if err != nil {
+		return nil, err
+	}
+	return RestTasks, nil
+}
+
+func (rr *TaskRepository) DeleteAllTasks(userId string) ([]models.Task, error) {
+	filter := bson.M{"userid": userId}
+	_, err := rr.collection.DeleteMany(context.TODO(), filter)
+	if err != nil {
+		return nil, err
+	}
+	var RestTasks []models.Task
+	RestTasks, err = rr.GetTasks(userId)
+	if err != nil {
+		return nil, err
+	}
+	return RestTasks, nil
 }
