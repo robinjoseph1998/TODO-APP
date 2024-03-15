@@ -50,7 +50,7 @@ func (uu *TaskUsecase) ExecuteDeleteTask(taskId string, userId string) ([]models
 func (uu *TaskUsecase) ExecuteDeleteAllTasks(userId string) ([]models.Task, error) {
 	restTask, err := uu.TaskRepo.DeleteAllTasks(userId)
 	if err != nil {
-		return nil, errors.New("can't delete all tasks")
+		return nil, errors.New("can't delete tasks")
 	}
 	return restTask, nil
 }
